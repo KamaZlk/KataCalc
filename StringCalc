@@ -1,0 +1,41 @@
+import java.util.Scanner;
+
+public class StringCalc {
+    public static void main(String[] args) {
+        Scanner scanner=new Scanner(System.in);
+        String expression= scanner.nextLine();
+
+    }
+    public static String Solution(String expression) throws Exception{
+        String oper;
+        String[] line=expression.split("[+\\-*/]");
+        if (line.length != 2) throw new Exception("Должно быть два операнда");
+        oper=detectOperation(expression);
+        if (oper == null) throw new Exception("Неподдерживаемая математическая операция");
+        String op1=line[0];
+        String op2=line[2];
+        if(!op1.startsWith("\"")||!op1.endsWith("\"")) throw new Exception("Операнды должны начинаться и заканчиваться ковычками");
+        if(isNumeric(op1)) throw new Exception("Первая операнда должнв быть строкой");
+
+
+    }
+    static String detectOperation(String expression) {
+        if (expression.contains("+")) return "+";
+        else if (expression.contains("-")) return "-";
+        else if (expression.contains("*")) return "*";
+        else if (expression.contains("/")) return "/";
+        else return null;
+    }
+    public static  boolean isNumeric(String str) {
+        return str.matches("-?\\d+(\\.\\d+)?");  // Регулярное выражение для числа (включая отрицательные числа и числа с плавающей точкой)
+    }
+    public static String[] numRate=new String[]{"0","1","2","3","4","5","6","7","8","9","10"};
+
+
+    public static boolean numSize(String size){
+        for(int i=0;i<numRate.length;i++){
+             
+        }
+    }
+}
+
