@@ -1,6 +1,8 @@
 import java.beans.Expression;
 import java.rmi.server.ExportException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+
 
 public class StringCalc{
     public static void main(String[] args) throws Exception {
@@ -16,61 +18,66 @@ public class StringCalc{
         int op3=0;
         String oper;
         String result;
-        String[] operands = expression.split("[+\\-*/]");
+        String[] operands = Pattern.compile("\\s[\\-+*/]\\s").split(expression);;
         oper = findOperation(expression);
-        if (operands.length != 2) throw new Exception("Должно быть два операнда");
+        if (operands.length != 2) throw new Exception("Должно быть два операнда, а так же до и после знака действия должны стоять пробелы");
         if (oper == null) throw new Exception("Невыполнимая команда");
         if(isQuotes(operands[0])){
-            if(operands[0].length()<12){
+            if(operands[0].length()<13){
                 op1=operands[0].substring(1,operands[0].length()-1);
             }else throw new Exception("Длина строчной операнды не может быть длинне 10 символов");
 
-            } else if (Number.isNumeric(operands[0])) throw new Exception("Первая операнда не может быть числом");
+        } else if (Number.isNumeric(operands[0])) throw new Exception("Первая операнда не может быть числом");
         else throw new Exception("Строчные операнды должны начинаться и заканчиваться ковычками");
         if(isQuotes(operands[1])){
-            if(operands[1].length()<12){
+            if(operands[1].length()<13){
                 op2=operands[1].substring(1,operands[1].length()-1);
             }
         }else if(Number.isNumeric(operands[1])){
             op3=Integer.parseInt(operands[1]);
         }else throw new  Exception("Cтрочные операнды должны начинаться и заканчиваться ковычками");
-            
+
 
         StringBuilder stringBuilder=new StringBuilder();
 
-            if(oper.equals("+")){
-                if(op2!=null){
+        if(oper.equals("+")){
+            if(op2!=null){
                 stringBuilder.append("\"");
                 stringBuilder.append(op1);
                 stringBuilder.append(op2);
                 stringBuilder.append("\"");}else throw new Exception("Невыполнимая команда");
 
-            } else if (oper.equals("-")) {
-                if(op2!=null){
-                    stringBuilder.append("\"");
-                    stringBuilder.append(op1.replace(op2,""));
+        } else if (oper.equals("-")) {
+            if(op2!=null){
+                stringBuilder.append("\"");
+                stringBuilder.append(op1.replace(op2,""));
 
-                    stringBuilder.append("\"");}else throw new Exception("Невыполнимая команда1");
-                
-            }
+                stringBuilder.append("\"");}else throw new Exception("Невыполнимая команда1");
+
+        }
 
 
-            if(oper.equals("*")){
-                if(op3!=0){
+        if(oper.equals("*")){
+            if(op3!=0){
                 stringBuilder.append("\"");
                 stringBuilder.append(op1.repeat(op3));
-                stringBuilder.append("\"");}else throw new Exception("Невыполнимая команда2");
 
-            } else if(oper.equals("/")) {
-                if(op3!=0){
-                    stringBuilder.append("\"");
+                if (stringBuilder.length() > 40) {
+                    stringBuilder.setLength(43);
+                    stringBuilder.replace(40, 42, "...");}
+                stringBuilder.append("\"");
+            }else throw new Exception("Невыполнимая команда2");
+
+        } else if(oper.equals("/")) {
+            if(op3!=0){
+                stringBuilder.append("\"");
                 stringBuilder.append(shortenString(op1,op3));
                 stringBuilder.append("\"");}else throw new Exception("Невыполнимая команда3");
 
 
-            }
+        }
         result=stringBuilder.toString();
-            return result;
+        return result;
 
 
 
@@ -104,6 +111,7 @@ public class StringCalc{
 
 
 
+
 }
 
 class Number {
@@ -113,7 +121,7 @@ class Number {
     public static boolean isNumeric(String str) {
         return str.matches("\\d+");
     }
-public static int whatNumber(String a){
+    public static int whatNumber(String a){
         for (int i=0;i<numbersArray.length;i++){
             if(a.equals(numbersArray[i])){
                 return i;
